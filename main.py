@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, Form, UploadFile, File
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from routes import router
+from config import SERVER_HOST, SERVER_PORT, DEBUG_MODE
 import json as pyjson
 import os
 from datetime import datetime
@@ -193,3 +194,14 @@ def logs_view(request: Request, simo_code: str = "001"):
         "log_content": log_content,
         "selected_simo": simo_code
     })
+
+# Server startup configuration
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "main:app", 
+        host=SERVER_HOST, 
+        port=SERVER_PORT, 
+        reload=DEBUG_MODE,
+        log_level="info"
+    )

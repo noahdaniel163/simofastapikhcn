@@ -16,56 +16,122 @@
 - Giao diện đẹp, responsive, có hiệu ứng loading, highlight từ khóa, phân trang.
 
 ## Cấu trúc thư mục
-- `main.py`         : Khởi tạo FastAPI, route UI, đọc dữ liệu mẫu.
+- `main.py`         : Khởi tạo FastAPI, route UI, đọc dữ liệu mẫu, cấu hình server port 8069.
 - `routes.py`       : Định nghĩa các endpoint gửi dữ liệu, API tìm kiếm, SSR, AJAX, xuất/gửi dữ liệu, log, health check.
 - `models.py`       : Định nghĩa schema dữ liệu cho từng mã SIMO.
 - `db_utils.py`     : Kết nối, truy vấn SQL Server, tìm kiếm tương đối, chuẩn hóa dữ liệu.
 - `auth.py`         : Hàm lấy token từ SBV.
-- `config.py`       : Cấu hình endpoint, tài khoản, lấy từ biến môi trường.
+- `config.py`       : Cấu hình endpoint, tài khoản, server host/port, lấy từ biến môi trường.
+- `launcher.py`     : Script launcher Python với dependency checking và error handling.
+- `start_server.bat`: Script Windows batch để khởi động dễ dàng.
+- `.env.example`    : Template file cấu hình biến môi trường.
 - `templates/`      : Giao diện web (base.html, home.html, data_process.html, data_result_ssr.html, ...), dữ liệu mẫu (sample_data.json).
 - `logs/`           : Thư mục chứa log gửi nhận cho từng mã SIMO.
 
 ## Hướng dẫn sử dụng
+
 ### 1. Cài đặt
-- Yêu cầu Python 3.10+ và pip.
+- Yêu cầu Python 3.8+ và pip.
 - Cài đặt thư viện:
   ```bash
-  pip install fastapi uvicorn requests jinja2 pyodbc
+  pip install fastapi uvicorn requests jinja2 pandas openpyxl pyodbc
   ```
 
-### 2. Thiết lập biến môi trường (tùy chọn)
-Bạn có thể cấu hình endpoint, tài khoản qua biến môi trường, ví dụ:
+### 2. Cấu hình port và biến môi trường
+Hệ thống mặc định chạy trên **port 8069**. Bạn có thể thay đổi qua:
+
+#### Option 1: Sử dụng biến môi trường
+```bash
+# Windows
+set SIMO_SERVER_PORT=8069
+set SIMO_SERVER_HOST=0.0.0.0
+set SIMO_DEBUG=True
+
+# Linux/Mac
+export SIMO_SERVER_PORT=8069
+export SIMO_SERVER_HOST=0.0.0.0
+export SIMO_DEBUG=True
+```
+
+#### Option 2: Sử dụng file .env
+```bash
+# Copy file cấu hình mẫu
+copy .env.example .env
+
+# Chỉnh sửa file .env theo nhu cầu
+notepad .env
+```
+
+#### Option 3: Cấu hình SBV API
 ```bash
 set SIMO_USERNAME=your_user
 set SIMO_PASSWORD=your_pass
 set SIMO_CONSUMER_KEY=your_key
 set SIMO_CONSUMER_SECRET=your_secret
-set SIMO_TOKEN_URL=https://...
-set SIMO_ENTRYPOINT_URL_001=https://...
+set SIMO_TOKEN_URL=https://mgsimotest.sbv.gov.vn/token
+set SIMO_ENTRYPOINT_URL_001=https://mgsimotest.sbv.gov.vn/simo/khdn/1.0/upload-bao-cao-danh-sach-tktt-khdn-api
 ```
-Nếu không thiết lập, hệ thống sẽ dùng giá trị mặc định.
 
-### 3. Chạy server
+### 3. Khởi động server (3 cách)
+
+#### Cách 1: Sử dụng launcher Python (Khuyến nghị)
 ```bash
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+python launcher.py
+```
+- Tự động kiểm tra dependencies
+- Cài đặt package thiếu
+- Error handling tốt
+- Hiển thị thông tin chi tiết
+
+#### Cách 2: Sử dụng script Windows
+```cmd
+start_server.bat
+```
+- Double-click file hoặc chạy từ cmd
+- Tự động kiểm tra Python và dependencies
+
+#### Cách 3: Chạy trực tiếp
+```bash
+# Chạy với main.py
+python main.py
+
+# Hoặc sử dụng uvicorn
+uvicorn main:app --host 0.0.0.0 --port 8069 --reload
 ```
 
-### 4. Truy cập giao diện
-- Mở trình duyệt, truy cập: http://localhost:8000/
-- Chọn mã SIMO, nhập hoặc upload file JSON, nhấn "Gửi dữ liệu" (giao diện home).
-- Truy cập http://localhost:8000/data-process để sử dụng giao diện tìm kiếm dữ liệu database:
-  - Có 2 phương thức tìm kiếm:
-    - **Tìm kiếm SSR:** Form đầu trang, submit sẽ chuyển sang trang kết quả đẹp (`/data-result-ssr`) với bảng dữ liệu, chọn dòng, xuất JSON/gửi SBV.
-    - **Tìm kiếm AJAX:** Form bên dưới, kết quả hiển thị realtime ngay trên trang, có phân trang, highlight, loading.
-- Có thể chọn nhiều dòng, chọn mã SIMO, xuất JSON đúng schema hoặc gửi trực tiếp lên endpoint SBV.
+### 4. Truy cập ứng dụng
+Sau khi khởi động thành công:
+- **Giao diện chính**: http://localhost:8069/
+- **API Documentation**: http://localhost:8069/docs
+- **Xử lý dữ liệu**: http://localhost:8069/data-process
+- **Log dữ liệu**: http://localhost:8069/logs
+- **Thống kê**: http://localhost:8069/stats
 
-### 5. Kiểm tra log
-- Mỗi lần gửi, log ghi vào `logs/simo_00x.log.txt` (x là mã SIMO).
-- Log gồm: thời gian, payload, response, header, lỗi (nếu có).
-- Log token lưu tại `logs/token.log.txt`.
+### 5. Sử dụng giao diện
+- **Trang chủ**: Chọn mã SIMO, nhập hoặc upload file JSON, gửi dữ liệu
+- **Xử lý dữ liệu**: Tìm kiếm database với 2 phương thức:
+  - **SSR**: Submit form → chuyển trang kết quả với bảng đẹp
+  - **AJAX**: Kết quả realtime, phân trang, highlight từ khóa
+- **Menu**: Xử lý Excel, thống kê, biểu đồ
 
-### 6. Chuyển đổi Excel/JSON
-- Tải file Excel mẫu hoặc chuyển đổi Excel sang JSON tại menu "Xử lý Excel".
+### 6. Kiểm tra log
+- Log gửi dữ liệu: `logs/simo_00x.log.txt`
+- Log token: `logs/token.log.txt`
+- Giao diện xem log: http://localhost:8069/logs
+
+## Thay đổi port nhanh
+Để thay đổi port mà không cần chỉnh sửa code:
+
+```bash
+# Windows
+set SIMO_SERVER_PORT=9000 && python launcher.py
+
+# Linux/Mac  
+SIMO_SERVER_PORT=9000 python launcher.py
+
+# Hoặc chỉnh trong file .env
+SIMO_SERVER_PORT=9000
+```
 
 ## Hướng dẫn tạo file kết nối Database và Endpoint
 
