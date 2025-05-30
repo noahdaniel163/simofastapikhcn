@@ -2,16 +2,16 @@
 {% block content %}
 <div class="main-content">
     <div class="card" style="max-width:950px;margin:40px auto 0 auto;">
-        <h2 class="title-glow">Biểu Đồ Thống Kê TKTT_TOCHUC</h2>
+        <h2 class="title-glow">Biểu Đồ Thống Kê TKTT_CANHAN</h2>
         <div class="chart-desc" style="margin-bottom:18px;">
-            <b>Chú thích:</b> <span style="color:#43ff43">1</span> = Đang hoạt động, <span style="color:#43ff43">5</span> = Đã đóng tài khoản.<br>
+            <b>Chú thích:</b> <span style="color:#43ff43">1</span> = Hoạt động, <span style="color:#43ff43">2</span> = Tạm ngừng, <span style="color:#43ff43">3</span> = Đóng tài khoản.<br>
             <b>Tài khoản nghi ngờ gian lận</b>: Số tài khoản có trường <b>NghiNgo &gt; 0</b>.
         </div>
         <div class="chart-tabs">
             <button class="chart-tab active" onclick="showChart('status')">Trạng thái tài khoản</button>
-            <button class="chart-tab" onclick="showChart('year')">Năm thành lập</button>
+            <button class="chart-tab" onclick="showChart('year')">Năm sinh</button>
             <button class="chart-tab" onclick="showChart('openyear')">Năm mở tài khoản</button>
-            <button class="chart-tab" onclick="showChart('toporg')">Top 10 tổ chức nhiều tài khoản</button>
+            <button class="chart-tab" onclick="showChart('topcustomer')">Top 10 khách hàng nhiều TK</button>
             <button class="chart-tab" onclick="showChart('latest')">10 tài khoản mở gần nhất</button>
             <button class="chart-tab" onclick="showChart('fraud')">Tài khoản nghi ngờ gian lận</button>
         </div>
@@ -19,7 +19,7 @@
             <canvas id="chart-status"></canvas>
             <canvas id="chart-year" style="display:none"></canvas>
             <canvas id="chart-openyear" style="display:none"></canvas>
-            <canvas id="chart-toporg" style="display:none"></canvas>
+            <canvas id="chart-topcustomer" style="display:none"></canvas>
             <canvas id="chart-latest" style="display:none"></canvas>
             <canvas id="chart-fraud" style="display:none"></canvas>
         </div>
@@ -34,7 +34,7 @@ fetch('/stats-data').then(res=>res.json()).then(data=>{
     renderStatus();
     renderYear();
     renderOpenYear();
-    renderTopOrg();
+    renderTopCustomer();
     renderLatest();
     renderFraud();
 });
@@ -43,7 +43,7 @@ function showChart(type) {
     document.querySelectorAll('.chart-tab').forEach((btn,i)=>{
         if (btn.textContent.toLowerCase().includes(type)) btn.classList.add('active');
     });
-    ['status','year','openyear','toporg','latest','fraud'].forEach(id=>{
+    ['status','year','openyear','topcustomer','latest','fraud'].forEach(id=>{
         document.getElementById('chart-'+id).style.display = (id===type)?'block':'none';
     });
 }
@@ -61,11 +61,11 @@ function renderStatus() {
 function renderYear() {
     const ctx = document.getElementById('chart-year').getContext('2d');
     if (chartObjs.year) chartObjs.year.destroy();
-    const labels = Object.keys(chartData.year);
-    const values = Object.values(chartData.year);
+    const labels = Object.keys(chartData.birth_year);
+    const values = Object.values(chartData.birth_year);
     chartObjs.year = new Chart(ctx, {
         type: 'bar',
-        data: { labels, datasets: [{ label:'Số tổ chức', data: values, backgroundColor: genColors(values.length) }] },
+        data: { labels, datasets: [{ label:'Số khách hàng', data: values, backgroundColor: genColors(values.length) }] },
         options: { responsive:true, plugins:{legend:{display:false}} }
     });
 }
@@ -80,12 +80,12 @@ function renderOpenYear() {
         options: { responsive:true, plugins:{legend:{display:false}} }
     });
 }
-function renderTopOrg() {
-    const ctx = document.getElementById('chart-toporg').getContext('2d');
-    if (chartObjs.toporg) chartObjs.toporg.destroy();
-    const labels = chartData.top_orgs.map(o=>o.TenToChuc||o.Cif);
-    const values = chartData.top_orgs.map(o=>o.count);
-    chartObjs.toporg = new Chart(ctx, {
+function renderTopCustomer() {
+    const ctx = document.getElementById('chart-topcustomer').getContext('2d');
+    if (chartObjs.topcustomer) chartObjs.topcustomer.destroy();
+    const labels = chartData.top_customers.map(o=>o.TenKhachHang||o.Cif);
+    const values = chartData.top_customers.map(o=>o.count);
+    chartObjs.topcustomer = new Chart(ctx, {
         type: 'bar',
         data: { labels, datasets: [{ label:'Số tài khoản', data: values, backgroundColor: genColors(values.length) }] },
         options: { responsive:true, indexAxis:'y', plugins:{legend:{display:false}} }
@@ -94,7 +94,7 @@ function renderTopOrg() {
 function renderLatest() {
     const ctx = document.getElementById('chart-latest').getContext('2d');
     if (chartObjs.latest) chartObjs.latest.destroy();
-    const labels = chartData.latest_accounts.map(a=>a.SoTaiKhoanToChuc+" ("+a.NgayMoTaiKhoan+")");
+    const labels = chartData.latest_accounts.map(a=>a.SoTaiKhoan+" ("+a.NgayMoTaiKhoan+")");
     const values = chartData.latest_accounts.map(a=>1);
     chartObjs.latest = new Chart(ctx, {
         type: 'line',

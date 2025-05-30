@@ -2,7 +2,7 @@
 {% block content %}
 <div class="main-content">
     <div class="card data-process-glow">
-        <h2 class="title-glow">Xử lý dữ liệu <span class="neon-green">TKTT_TOCHUC</span></h2>
+        <h2 class="title-glow">Xử lý dữ liệu <span class="neon-green">TKTT_CANHAN</span></h2>
         <form id="search-form-ssr" method="post" action="/data-result-ssr">
             <div class="form-row search-row-glow">
                 <div class="search-col">
@@ -10,16 +10,16 @@
                     <input type="text" name="Cif" id="search_cif" placeholder="Nhập CIF...">
                 </div>
                 <div class="search-col">
-                    <label for="search_ten">Tên Tổ chức</label>
-                    <input type="text" name="TenToChuc" id="search_ten" placeholder="Nhập tên tổ chức...">
+                    <label for="search_ten">Tên Khách Hàng</label>
+                    <input type="text" name="TenKhachHang" id="search_ten" placeholder="Nhập tên khách hàng...">
                 </div>
                 <div class="search-col">
                     <label for="search_stk">Số Tài Khoản</label>
-                    <input type="text" name="SoTaiKhoanToChuc" id="search_stk" placeholder="Nhập số tài khoản...">
+                    <input type="text" name="SoTaiKhoan" id="search_stk" placeholder="Nhập số tài khoản...">
                 </div>
                 <div class="search-col">
-                    <label for="search_giayphep">Số Giấy Phép</label>
-                    <input type="text" name="SoGiayPhepThanhLap" id="search_giayphep" placeholder="Nhập số giấy phép...">
+                    <label for="search_soid">Số ID/CCCD</label>
+                    <input type="text" name="SoID" id="search_soid" placeholder="Nhập số CCCD/CMND...">
                 </div>
                 <div class="search-col search-btn-col">
                     <button type="submit" class="btn-neon">Tìm kiếm</button>
@@ -29,23 +29,23 @@
         <div class="form-row">
             <div style="margin-top:18px;color:#43ff43;font-weight:600;">Hoặc sử dụng tìm kiếm realtime (AJAX) như cũ ở bên dưới:</div>
         </div>
-        <form id="search-form" method="get" action="/data/tktt_tochuc">
+        <form id="search-form" method="get" action="/data/tktt_canhan">
             <div class="form-row search-row-glow">
                 <div class="search-col">
                     <label for="search_cif2">CIF</label>
                     <input type="text" name="cif" id="search_cif2" placeholder="Nhập CIF...">
                 </div>
                 <div class="search-col">
-                    <label for="search_ten2">Tên Tổ chức</label>
-                    <input type="text" name="ten_to_chuc" id="search_ten2" placeholder="Nhập tên tổ chức...">
+                    <label for="search_ten2">Tên Khách Hàng</label>
+                    <input type="text" name="ten_khach_hang" id="search_ten2" placeholder="Nhập tên khách hàng...">
                 </div>
                 <div class="search-col">
                     <label for="search_stk2">Số Tài Khoản</label>
                     <input type="text" name="so_tai_khoan" id="search_stk2" placeholder="Nhập số tài khoản...">
                 </div>
                 <div class="search-col">
-                    <label for="search_giayphep2">Số Giấy Phép</label>
-                    <input type="text" name="so_giay_phep" id="search_giayphep2" placeholder="Nhập số giấy phép...">
+                    <label for="search_soid2">Số ID/CCCD</label>
+                    <input type="text" name="so_id" id="search_soid2" placeholder="Nhập số CCCD/CMND...">
                 </div>
                 <div class="search-col search-btn-col">
                     <button type="submit" class="btn-neon">Tìm kiếm AJAX</button>

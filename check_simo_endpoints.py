@@ -1,10 +1,10 @@
 import requests
 
-SIMO_ENDPOINTS = {
-    "001": "https://mgsimotest.sbv.gov.vn/simo/khdn/1.0/upload-bao-cao-danh-sach-tktt-khdn-api",
-    "002": "https://mgsimotest.sbv.gov.vn/simo/khdn/1.0/upload-bao-cao-tktt-khdn-nngl-api",
-    "003": "https://mgsimotest.sbv.gov.vn/simo/khdn/1.0/upload-bao-cao-cap-nhat-tktt-khdn-nngl-api",
-    "004": "https://mgsimotest.sbv.gov.vn/simo/khdn/1.0/upload-bao-cao-cap-nhat-danh-sach-tktt-khdn-api",
+TKTT_ENDPOINTS = {
+    "001": "https://mgsimotest.sbv.gov.vn/simo/tktt/1.0/upload-bao-cao-danh-sach-tktt-api",
+    "002": "https://mgsimotest.sbv.gov.vn/simo/tktt/1.0/upload-bao-cao-tktt-nghi-ngo-gian-lan-api",
+    "003": "https://mgsimotest.sbv.gov.vn/simo/tktt/1.0/upload-bao-cao-cap-nhat-tktt-nghi-ngo-gian-lan-api",
+    "004": "https://mgsimotest.sbv.gov.vn/simo/tktt/1.0/upload-bao-cao-cap-nhat-khach-hang-mo-tktt-api",
 }
 
 def check_url(url):
@@ -21,9 +21,9 @@ def check_url(url):
         return f"Lỗi kết nối: {e}"
 
 def main():
-    for simo, url in SIMO_ENDPOINTS.items():
+    for tktt, url in TKTT_ENDPOINTS.items():
         result = check_url(url)
-        print(f"SIMO {simo}: {url}\n  => {result}\n")
+        print(f"TKTT {tktt}: {url}\n  => {result}\n")
 
 if __name__ == "__main__":
     main()
