@@ -31,93 +31,85 @@
 ## Hướng dẫn sử dụng
 
 ### 1. Cài đặt
-- Yêu cầu Python 3.8+ và pip.
-- Cài đặt thư viện:
+- Yêu cầu Python >= 3.8 và pip.
+- Cài đặt các thư viện cần thiết:
   ```bash
+  pip install -r requirements.txt
+  # Hoặc nếu chưa có requirements.txt:
   pip install fastapi uvicorn requests jinja2 pandas openpyxl pyodbc
   ```
 
-### 2. Cấu hình port và biến môi trường
-Hệ thống mặc định chạy trên **port 8069**. Bạn có thể thay đổi qua:
+### 2. Cấu hình hệ thống
+- **Cấu hình kết nối Database và Endpoint**:
+  - Tạo file `db_config.py` và `config.py` theo mẫu có sẵn (không commit lên git).
+  - Sử dụng biến môi trường hoặc file `.env` để cấu hình thông tin nhạy cảm (server, user, password, endpoint, v.v).
+  - Không ghi thông tin thật (user, password, endpoint) vào README.md hoặc source code public.
+- **Ví dụ cấu hình biến môi trường (Windows):**
+  ```cmd
+  set SIMO_DB_SERVER=your_db_server
+  set SIMO_DB_NAME=your_db_name
+  set SIMO_DB_USER=your_db_user
+  set SIMO_DB_PASSWORD=your_db_password
+  set SIMO_USERNAME=your_sbv_user
+  set SIMO_PASSWORD=your_sbv_pass
+  set SIMO_CONSUMER_KEY=your_consumer_key
+  set SIMO_CONSUMER_SECRET=your_consumer_secret
+  set SIMO_TOKEN_URL=https://.../token
+  set SIMO_ENTRYPOINT_URL_001=https://.../upload-bao-cao-danh-sach-tktt-khdn-api
+  # ... các biến khác tương tự ...
+  ```
+- **Hoặc cấu hình qua file `.env`** (khuyến nghị, không commit lên git):
+  ```env
+  SIMO_DB_SERVER=your_db_server
+  SIMO_DB_NAME=your_db_name
+  SIMO_DB_USER=your_db_user
+  SIMO_DB_PASSWORD=your_db_password
+  SIMO_USERNAME=your_sbv_user
+  SIMO_PASSWORD=your_sbv_pass
+  SIMO_CONSUMER_KEY=your_consumer_key
+  SIMO_CONSUMER_SECRET=your_consumer_secret
+  SIMO_TOKEN_URL=https://.../token
+  SIMO_ENTRYPOINT_URL_001=https://.../upload-bao-cao-danh-sach-tktt-khdn-api
+  # ...
+  ```
 
-#### Option 1: Sử dụng biến môi trường
-```bash
-# Windows
-set SIMO_SERVER_PORT=8069
-set SIMO_SERVER_HOST=0.0.0.0
-set SIMO_DEBUG=True
+### 3. Khởi động ứng dụng
+- Chạy bằng launcher:
+  ```bash
+  python launcher.py
+  ```
+- Hoặc chạy trực tiếp:
+  ```bash
+  python main.py
+  # hoặc
+  uvicorn main:app --host 0.0.0.0 --port 8069 --reload
+  ```
+- Có thể thay đổi port bằng biến môi trường `SIMO_SERVER_PORT`.
 
-# Linux/Mac
-export SIMO_SERVER_PORT=8069
-export SIMO_SERVER_HOST=0.0.0.0
-export SIMO_DEBUG=True
-```
+### 4. Sử dụng giao diện web
+- Truy cập: http://localhost:8069/
+- **Trang chủ:** Chọn mã SIMO, nhập hoặc upload file JSON, gửi dữ liệu.
+- **Xử lý dữ liệu:** Tìm kiếm, lọc, chọn dòng, xuất JSON, gửi SBV.
+- **Chuyển đổi Excel sang JSON:**
+  - Vào menu "Chuyển Excel sang JSON".
+  - Chọn mã SIMO, upload file Excel mẫu đúng định dạng.
+  - Xem và tải kết quả JSON.
+- **Tải file Excel mẫu:**
+  - Vào menu "Tải file Excel mẫu".
+  - Chọn mã SIMO, tải về file mẫu để nhập liệu đúng chuẩn.
+- **Kiểm tra log:**
+  - Vào menu "Log dữ liệu" để xem lịch sử gửi nhận, lỗi, phản hồi từ SBV.
 
-#### Option 2: Sử dụng file .env
-```bash
-# Copy file cấu hình mẫu
-copy .env.example .env
+### 5. Bảo mật
+- Không commit các file chứa thông tin nhạy cảm (db_config.py, config.py, .env) lên git.
+- Đảm bảo thư mục logs/ chỉ dùng cho kiểm thử, không public dữ liệu thật.
+- Khi triển khai thực tế, đổi tất cả mật khẩu, endpoint, khóa truy cập.
 
-# Chỉnh sửa file .env theo nhu cầu
-notepad .env
-```
-
-#### Option 3: Cấu hình SBV API
-```bash
-set SIMO_USERNAME=your_user
-set SIMO_PASSWORD=your_pass
-set SIMO_CONSUMER_KEY=your_key
-set SIMO_CONSUMER_SECRET=your_secret
-set SIMO_TOKEN_URL=https://mgsimotest.sbv.gov.vn/token
-set SIMO_ENTRYPOINT_URL_001=https://mgsimotest.sbv.gov.vn/simo/khdn/1.0/upload-bao-cao-danh-sach-tktt-khdn-api
-```
-
-### 3. Khởi động server (3 cách)
-
-#### Cách 1: Sử dụng launcher Python (Khuyến nghị)
-```bash
-python launcher.py
-```
-- Tự động kiểm tra dependencies
-- Cài đặt package thiếu
-- Error handling tốt
-- Hiển thị thông tin chi tiết
-
-#### Cách 2: Sử dụng script Windows
-```cmd
-start_server.bat
-```
-- Double-click file hoặc chạy từ cmd
-- Tự động kiểm tra Python và dependencies
-
-#### Cách 3: Chạy trực tiếp
-```bash
-# Chạy với main.py
-python main.py
-
-# Hoặc sử dụng uvicorn
-uvicorn main:app --host 0.0.0.0 --port 8069 --reload
-```
-
-### 4. Truy cập ứng dụng
-Sau khi khởi động thành công:
-- **Giao diện chính**: http://localhost:8069/
-- **API Documentation**: http://localhost:8069/docs
-- **Xử lý dữ liệu**: http://localhost:8069/data-process
-- **Log dữ liệu**: http://localhost:8069/logs
-- **Thống kê**: http://localhost:8069/stats
-
-### 5. Sử dụng giao diện
-- **Trang chủ**: Chọn mã SIMO, nhập hoặc upload file JSON, gửi dữ liệu
-- **Xử lý dữ liệu**: Tìm kiếm database với 2 phương thức:
-  - **SSR**: Submit form → chuyển trang kết quả với bảng đẹp
-  - **AJAX**: Kết quả realtime, phân trang, highlight từ khóa
-- **Menu**: Xử lý Excel, thống kê, biểu đồ
-
-### 6. Kiểm tra log
-- Log gửi dữ liệu: `logs/simo_00x.log.txt`
-- Log token: `logs/token.log.txt`
-- Giao diện xem log: http://localhost:8069/logs
+### 6. Một số lưu ý khác
+- Dữ liệu mẫu và template Excel nằm trong thư mục `templates/`.
+- Log gửi nhận lưu tại thư mục `logs/`.
+- Khi chuyển đổi Excel sang JSON, cần dùng đúng file mẫu để tránh lỗi định dạng.
+- Nếu gặp lỗi kết nối database hoặc endpoint, kiểm tra lại biến môi trường và file cấu hình.
 
 ## Thay đổi port nhanh
 Để thay đổi port mà không cần chỉnh sửa code:
