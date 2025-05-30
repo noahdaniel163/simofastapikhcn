@@ -213,28 +213,65 @@ CREATE TABLE TKTT_TOCHUC (
 );
 ```
 
-### 2. Định nghĩa các trường
-- **Cif**: Mã định danh tổ chức, kiểu NVARCHAR(50)
-- **TenToChuc**: Tên tổ chức, kiểu NVARCHAR(255)
-- **SoGiayPhepThanhLap**: Số giấy phép thành lập, kiểu NVARCHAR(50)
-- **LoaiGiayToThanhLapToChuc**: Loại giấy tờ thành lập, kiểu INT
-- **NgayThanhLap**: Ngày thành lập, kiểu NVARCHAR(20)
-- **DiaChiToChuc**: Địa chỉ tổ chức, kiểu NVARCHAR(255)
-- **HoTenNguoiDaiDien**: Họ tên người đại diện, kiểu NVARCHAR(100)
-- **SoGiayToTuyThan**: Số giấy tờ tùy thân, kiểu NVARCHAR(50)
-- **LoaiGiayToTuyThan**: Loại giấy tờ tùy thân, kiểu INT
-- **NgaySinh**: Ngày sinh người đại diện, kiểu NVARCHAR(20)
-- **GioiTinh**: Giới tính, kiểu INT (1: Nam, 2: Nữ)
-- **QuocTich**: Quốc tịch, kiểu NVARCHAR(50)
-- **DienThoai**: Số điện thoại, kiểu NVARCHAR(30)
-- **SoTaiKhoanToChuc**: Số tài khoản tổ chức, kiểu NVARCHAR(50)
-- **NgayMoTaiKhoan**: Ngày mở tài khoản, kiểu NVARCHAR(20)
-- **TrangThaiTaiKhoan**: Trạng thái tài khoản, kiểu INT
-- **DiaChiMAC**: Địa chỉ MAC, kiểu NVARCHAR(50)
-- **SO_IMEI**: Số IMEI, kiểu NVARCHAR(50)
-- **NghiNgo**: Cờ nghi ngờ, kiểu INT
-- **LyDoCapNhat**: Lý do cập nhật, kiểu NVARCHAR(255)
-- **UpdateDate**: Ngày cập nhật, kiểu DATETIME
+### 2. Định nghĩa các trường (chuẩn theo JSON từng mã SIMO)
+
+#### SIMO 001 (Cá nhân)
+- **Cif**: Mã định danh khách hàng, NVARCHAR(50)
+- **SoID**: Số giấy tờ định danh, NVARCHAR(50)
+- **LoaiID**: Loại giấy tờ định danh, INT
+- **TenKhachHang**: Tên khách hàng, NVARCHAR(255)
+- **NgaySinh**: Ngày sinh, NVARCHAR(20)
+- **GioiTinh**: Giới tính, INT (1: Nam, 0: Nữ)
+- **MaSoThue**: Mã số thuế, NVARCHAR(50)
+- **SoDienThoaiDangKyDichVu**: Số điện thoại đăng ký dịch vụ, NVARCHAR(30)
+- **DiaChi**: Địa chỉ, NVARCHAR(255)
+- **DiaChiKiemSoatTruyCap**: Địa chỉ MAC, NVARCHAR(50)
+- **MaSoNhanDangThietBiDiDong**: Số IMEI, NVARCHAR(50)
+- **SoTaiKhoan**: Số tài khoản, NVARCHAR(50)
+- **LoaiTaiKhoan**: Loại tài khoản, INT
+- **TrangThaiHoatDongTaiKhoan**: Trạng thái hoạt động tài khoản, INT
+- **NgayMoTaiKhoan**: Ngày mở tài khoản, NVARCHAR(20)
+- **PhuongThucMoTaiKhoan**: Phương thức mở tài khoản, INT
+- **NgayXacThucTaiQuay**: Ngày xác thực tại quầy, NVARCHAR(20)
+- **QuocTich**: Quốc tịch, NVARCHAR(50)
+
+#### SIMO 002 (Tài khoản nghi ngờ gian lận)
+- **Cif**: Mã định danh khách hàng, NVARCHAR(50)
+- **SoTaiKhoan**: Số tài khoản, NVARCHAR(50)
+- **TenKhachHang**: Tên khách hàng, NVARCHAR(255)
+- **TrangThaiHoatDongTaiKhoan**: Trạng thái hoạt động tài khoản, INT
+- **NghiNgo**: Mã nghi ngờ, INT
+- **GhiChu**: Ghi chú, NVARCHAR(255)
+
+#### SIMO 003 (Cập nhật tài khoản nghi ngờ)
+- **Cif**: Mã định danh khách hàng, NVARCHAR(50)
+- **TenKhachHang**: Tên khách hàng, NVARCHAR(255)
+- **SoTaiKhoan**: Số tài khoản, NVARCHAR(50)
+- **TrangThaiHoatDongTaiKhoan**: Trạng thái hoạt động tài khoản, INT
+- **NghiNgo**: Mã nghi ngờ, INT
+- **GhiChu**: Ghi chú, NVARCHAR(255)
+- **LyDoCapNhat**: Lý do cập nhật, NVARCHAR(255)
+
+#### SIMO 004 (Cập nhật khách hàng mở TKTT)
+- **Cif**: Mã định danh khách hàng, NVARCHAR(50)
+- **SoID**: Số giấy tờ định danh, NVARCHAR(50)
+- **LoaiID**: Loại giấy tờ định danh, INT
+- **TenKhachHang**: Tên khách hàng, NVARCHAR(255)
+- **NgaySinh**: Ngày sinh, NVARCHAR(20)
+- **GioiTinh**: Giới tính, INT (1: Nam, 0: Nữ)
+- **MaSoThue**: Mã số thuế, NVARCHAR(50)
+- **SoDienThoaiDangKyDichVu**: Số điện thoại đăng ký dịch vụ, NVARCHAR(30)
+- **DiaChi**: Địa chỉ, NVARCHAR(255)
+- **DiaChiKiemSoatTruyCap**: Địa chỉ MAC, NVARCHAR(50)
+- **MaSoNhanDangThietBiDiDong**: Số IMEI, NVARCHAR(50)
+- **SoTaiKhoan**: Số tài khoản, NVARCHAR(50)
+- **TrangThaiHoatDongTaiKhoan**: Trạng thái hoạt động tài khoản, INT
+- **NgayXacThucTaiQuay**: Ngày xác thực tại quầy, NVARCHAR(20)
+- **LoaiTaiKhoan**: Loại tài khoản, INT
+- **NgayMoTaiKhoan**: Ngày mở tài khoản, NVARCHAR(20)
+- **PhuongThucMoTaiKhoan**: Phương thức mở tài khoản, INT
+- **GhiChu**: Ghi chú, NVARCHAR(255)
+- **QuocTich**: Quốc tịch, NVARCHAR(50)
 
 ### 3. Lưu ý bảo mật
 - **Không lưu thông tin tài khoản, mật khẩu, endpoint thật trong file README hoặc source code.**
